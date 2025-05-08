@@ -1,0 +1,86 @@
+<div class="form-wrapper">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Step 1</ng-template>
+
+        <div class="form-row">
+          <label for="login">Login</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <input matInput id="login" formControlName="login">
+          </mat-form-field>
+          <div class="description">Login must be a valid email</div>
+        </div>
+
+        <div class="form-row">
+          <label for="password">Password</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <input matInput type="password" id="password" formControlName="password">
+          </mat-form-field>
+          <div class="description">Must contain min 1 digit and 1 uppercase letter</div>
+        </div>
+
+        <div class="form-row">
+          <label for="confirmPassword">Confirm password</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <input matInput type="password" id="confirmPassword" formControlName="confirmPassword">
+          </mat-form-field>
+          <div class="description">Must match password</div>
+        </div>
+
+        <div class="checkbox-row">
+          <mat-checkbox formControlName="agree">Agree to work for food</mat-checkbox>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button matStepperNext color="primary" [disabled]="firstFormGroup.invalid">
+            Go to step 2
+          </button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Step 2</ng-template>
+
+        <div class="form-row">
+          <label for="country">Country</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-select id="country" formControlName="country" (selectionChange)="onCountryChange($event)">
+              <mat-option *ngFor="let country of countries" [value]="country.id">
+                {{ country.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="description" *ngIf="secondFormGroup.get('country')?.hasError('required')">
+            Country is required
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label for="province">Province</label>
+          <mat-form-field appearance="fill" class="full-width">
+            <mat-select id="province" formControlName="province" [disabled]="!provinces.length">
+              <mat-option *ngFor="let province of provinces" [value]="province.id">
+                {{ province.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="description" *ngIf="secondFormGroup.get('province')?.hasError('required')">
+            Province is required
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" (click)="onSave()" [disabled]="secondFormGroup.invalid">
+            Save
+          </button>
+        </div>
+
+        <div *ngIf="serverErrorMessage" class="server-error">
+          {{ serverErrorMessage }}
+        </div>
+      </form>
+    </mat-step>
+  </mat-stepper>
+</div>
